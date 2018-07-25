@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ElegirEventoActivity">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="0"
+            android:text=" Ingrese Número de Evento"/>
+
+
+        <EditText
+            android:id="@+id/nroEvento"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_weight="0"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text=" Ingrese Código de Evento"/>
+
+
+        <EditText
+            android:id="@+id/codigoEvento"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_weight="0"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/button"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:onClick="buttonClick"
+            android:text="Ingresar" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
