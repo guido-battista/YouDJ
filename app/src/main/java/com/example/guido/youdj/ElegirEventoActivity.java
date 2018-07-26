@@ -3,8 +3,9 @@ package com.example.guido.youdj;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 import android.content.Intent;
+
+import com.example.guido.youdj.ListaVotar.ListasCancionesActivity;
 
 public class ElegirEventoActivity extends AppCompatActivity {
 
@@ -17,7 +18,7 @@ public class ElegirEventoActivity extends AppCompatActivity {
     public void buttonClick(View v) {
         // Code here executes on main thread after user presses button
 
-        Intent i = new Intent(this, ListaCancionesActivity.class);
+        Intent i = new Intent(this, ListasCancionesActivity.class);
         startActivity(i);
 
     }
