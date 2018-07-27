@@ -1,9 +1,11 @@
 package com.example.guido.youdj.ListaVotar;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +13,24 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
+import com.example.guido.youdj.Volley.MySingleton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,15 +48,67 @@ public class CancionesAVotarFragment extends Fragment
     @Override
     public void onClick(View view, int position, boolean isLongClick)
     {
-        Toast.makeText(getActivity(), canciones.get(position).titulo, Toast.LENGTH_SHORT).show();
+        final int pos = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Desea votar este tema")
+                .setMessage(canciones.get(position).titulo)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Toast.makeText(getActivity(),"Se apreto SI", Toast.LENGTH_SHORT).show();
+                        votarTema(canciones.get(pos));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity(),"Se apreto NO", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
+        //Toast.makeText(getActivity(), canciones.get(position).titulo, Toast.LENGTH_SHORT).show();
     }
 
+
+    public void votarTema(final Cancion cancion)
+    {
+        //Toast.makeText(getActivity(),"Se va a votar el tema "+cancion.titulo, Toast.LENGTH_SHORT).show();
+
+        //Se buscan las canciones en el WS
+        //Se llama al WebService
+        String url = getResources().getString(R.string.WsUrl) + "/sumarVoto";
+
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //This code is executed if the server responds, whether or not the response contains data.
+                //The String 'response' contains the server's response.
+                Toast.makeText(getActivity(),"Sumo un voto", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+                Toast.makeText(getActivity(),"Hubo un error", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("_id", cancion._id); //Add the data you'd like to send to the server.
+                MyData.put("idEvento", cancion.idEvento); //Add the data you'd like to send to the server.
+                return MyData;
+            }
+        };
+
+        MySingleton.getInstance(getActivity()).addToRequestQueue(MyStringRequest);
+
+    }
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+    private String cancionesString;
     private String mParam1;
     private String mParam2;
     private List<Cancion> canciones;
@@ -53,6 +118,7 @@ public class CancionesAVotarFragment extends Fragment
     public CancionesAVotarFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -73,17 +139,27 @@ public class CancionesAVotarFragment extends Fragment
         return fragment;
     }
 
-    public static CancionesAVotarFragment newInstance() {
+    public static CancionesAVotarFragment newInstance(String canciones) {
         CancionesAVotarFragment fragment = new CancionesAVotarFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, canciones);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
+        if (canciones == null) {
+            if (getArguments() != null) {
+                cancionesString = getArguments().getString(ARG_PARAM1);
+                try {
+                    canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                } catch (JSONException e) {
+                }
+                //mParam2 = getArguments().getString(ARG_PARAM2);
+            }
         }
     }
 
@@ -93,12 +169,25 @@ public class CancionesAVotarFragment extends Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_canciones_avotar, container, false);
 
+        // Armo la lista de canciones
+        if (canciones == null) {
+            if (getArguments() != null) {
+                cancionesString = getArguments().getString(ARG_PARAM1);
+                try {
+                    canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                } catch (JSONException e) {
+                }
+                //mParam2 = getArguments().getString(ARG_PARAM2);
+            }
+        }
+
         //ESTO DEBERIA IR EN EL FRAGMENT!!!!!!!!!
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
         //* Esto se reemplaza por el webservice
+        /*
         canciones = new ArrayList<>();
         Cancion cancion = new Cancion("Cancion1", 3);
         canciones.add(cancion);
@@ -132,7 +221,7 @@ public class CancionesAVotarFragment extends Fragment
         canciones.add(cancion);
         cancion = new Cancion("Cancion42", 3);
         canciones.add(cancion);
-
+        */
 
         //*************************************
         CancionVotarAdapter adapter = new CancionVotarAdapter(canciones, this);

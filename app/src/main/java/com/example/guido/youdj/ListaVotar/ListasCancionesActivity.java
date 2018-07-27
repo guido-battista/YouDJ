@@ -1,5 +1,7 @@
 package com.example.guido.youdj.ListaVotar;
 
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,11 +23,28 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.android.volley.toolbox.JsonArrayRequest;
+import org.json.JSONArray;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import android.widget.Toast;
+
+//Import para Volley
+import com.android.volley.Request;
+
+import org.json.JSONObject;
+
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import com.example.guido.youdj.ListaVotar.ListasCancionesActivity;
+import com.example.guido.youdj.Modelos.Evento;
+import com.example.guido.youdj.Volley.MySingleton;
 
 public class ListasCancionesActivity extends AppCompatActivity {
 
@@ -39,6 +58,11 @@ public class ListasCancionesActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    public JSONArray cancionesVotar;
+    public JSONArray cancionesYaEscuchadas;
+    public String idEvento;
+    ProgressDialog progressDialog;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -49,6 +73,50 @@ public class ListasCancionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listas_canciones);
 
+
+        //Se activa el progress bar para ir al WS
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Buscando..."); // Setting Message
+        progressDialog.setTitle("Buscando Evento"); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+        //------------------------------------------------
+
+
+        //Recupero el Id de evento de las preferencias
+        SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
+        idEvento = sp.getString("idEvento", "default value");
+
+        //Se buscan las canciones en el WS
+        //Se llama al WebService
+        String url = getResources().getString(R.string.WsUrl) + "/canciones?idEvento=" + idEvento;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url , null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        cancionesVotar = response;
+                        progressDialog.dismiss();
+                        crearComponentes();
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        progressDialog.dismiss();
+                    }
+                });
+
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+
+    }
+
+    protected void crearComponentes()
+    {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -64,16 +132,6 @@ public class ListasCancionesActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
     }
 
 
@@ -120,7 +178,7 @@ public class ListasCancionesActivity extends AppCompatActivity {
 
             switch (position)
             {
-                case (0): fragment =  CancionesAVotarFragment.newInstance();
+                case (0): fragment =  CancionesAVotarFragment.newInstance(cancionesVotar.toString());
                 break;
 
                 case (1): fragment =  CancionesYaEscuchadasFragment.newInstance();

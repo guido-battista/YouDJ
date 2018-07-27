@@ -1,5 +1,6 @@
 package com.example.guido.youdj;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -130,6 +131,13 @@ public class ElegirEventoActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Codigo de Evento Incorrecto",Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //Guardo el Id de evento en las preferencias
+        SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("idEvento", evento.id);
+        editor.apply();
+        //------------------------------------------
 
         Intent i = new Intent(this, ListasCancionesActivity.class);
         startActivity(i);
