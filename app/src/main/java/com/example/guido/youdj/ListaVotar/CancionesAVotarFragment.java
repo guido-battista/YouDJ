@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
@@ -26,8 +27,18 @@ import com.example.guido.youdj.R;
  * Use the {@link CancionesAVotarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CancionesAVotarFragment extends Fragment {
+public class CancionesAVotarFragment extends Fragment
+    implements  ItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
+    //Defino mètodos de click
+
+    @Override
+    public void onClick(View view, int position, boolean isLongClick)
+    {
+        Toast.makeText(getActivity(), canciones.get(position).titulo, Toast.LENGTH_SHORT).show();
+    }
+
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -35,6 +46,7 @@ public class CancionesAVotarFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<Cancion> canciones;
 
     private OnFragmentInteractionListener mListener;
 
@@ -87,7 +99,7 @@ public class CancionesAVotarFragment extends Fragment {
         rv.setLayoutManager(llm);
 
         //* Esto se reemplaza por el webservice
-        List<Cancion> canciones = new ArrayList<>();
+        canciones = new ArrayList<>();
         Cancion cancion = new Cancion("Cancion1", 3);
         canciones.add(cancion);
         cancion = new Cancion("Cancion2", 3);
@@ -123,7 +135,7 @@ public class CancionesAVotarFragment extends Fragment {
 
 
         //*************************************
-        CancionVotarAdapter adapter = new CancionVotarAdapter(canciones);
+        CancionVotarAdapter adapter = new CancionVotarAdapter(canciones, this);
         rv.setAdapter(adapter);
 
         return view;

@@ -6,51 +6,69 @@
     android:layout_height="match_parent"
     tools:context=".ElegirEventoActivity">
 
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guidelineL"
+
+        android:orientation="vertical"/>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:gravity="center"
+        android:paddingLeft="74dp"
+        android:paddingRight="74dp"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/simpleImageView"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:src="@drawable/splash"
+            android:paddingBottom="48dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="0"
-            android:text=" Ingrese Número de Evento"/>
+            android:gravity="center"
+            android:text=" Ingrese Número de Evento" />
 
 
         <EditText
             android:id="@+id/nroEvento"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_weight="0"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center"
             android:inputType="number"
-            android:maxLines="1"/>
+            android:maxLines="1" />
 
         <TextView
             android:layout_width="match_parent"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text=" Ingrese Código de Evento"/>
+            android:gravity="center"
+            android:text=" Ingrese Código de Evento" />
 
 
         <EditText
             android:id="@+id/codigoEvento"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_weight="0"
             android:layout_height="wrap_content"
-            android:maxLines="1"/>/>
+            android:layout_weight="0"
+            android:gravity="center"
+            android:maxLines="1" />/>
 
         <Button
             android:id="@+id/button"
-            android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:gravity="center"
             android:onClick="buttonClick"
             android:text="Ingresar" />
 

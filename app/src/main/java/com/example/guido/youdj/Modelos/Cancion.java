@@ -2,6 +2,7 @@ package com.example.guido.youdj.Modelos;
 
 public class Cancion {
 
+    public String _id;
     public String titulo;
     public int votos;
 
