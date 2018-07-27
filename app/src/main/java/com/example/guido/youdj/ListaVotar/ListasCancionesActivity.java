@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 //Import para Volley
 import com.android.volley.Request;
+import com.android.volley.DefaultRetryPolicy;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,9 +69,9 @@ public class ListasCancionesActivity extends AppCompatActivity
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        cancionesVotar = filtrarCanciones(response, "Votar");
+                        cancionesVotar = Cancion.filtrarCanciones(response, "Votar");
                         cancionesAVotarFragment.recargar(cancionesVotar.toString());
-                        
+
                         progressDialog.dismiss();
 
                     }
@@ -83,27 +84,13 @@ public class ListasCancionesActivity extends AppCompatActivity
                     }
                 });
 
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
-    }
-
-    public JSONArray filtrarCanciones(JSONArray input, String filtro) {
-        JSONArray resp = new JSONArray();
-
-        try {
-            for (int i = 0; i < input.length(); i++) {
-                if (input.getJSONObject(i).get("estado").equals(filtro))
-                {
-                    resp.put(input.get(i));
-                }
-            }
-        }
-        catch(JSONException e)
-        {
-
-        }
-
-        return resp;
     }
 
     @Override
@@ -171,7 +158,8 @@ public class ListasCancionesActivity extends AppCompatActivity
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        cancionesVotar = filtrarCanciones(response, "Votar");
+                        cancionesVotar = Cancion.filtrarCanciones(response, "Votar");
+                        cancionesYaEscuchadas = Cancion.filtrarCanciones(response, "Escuchada");
                         progressDialog.dismiss();
                         crearComponentes();
                     }
@@ -183,6 +171,11 @@ public class ListasCancionesActivity extends AppCompatActivity
                         progressDialog.dismiss();
                     }
                 });
+
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
@@ -260,7 +253,7 @@ public class ListasCancionesActivity extends AppCompatActivity
 
                 case (1):
                 {
-                    cancionesYaEscuchadasFragment = CancionesYaEscuchadasFragment.newInstance();
+                    cancionesYaEscuchadasFragment = CancionesYaEscuchadasFragment.newInstance(cancionesYaEscuchadas.toString());
                     fragment =  cancionesYaEscuchadasFragment;
                 }
                 break;

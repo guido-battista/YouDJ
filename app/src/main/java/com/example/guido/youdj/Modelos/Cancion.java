@@ -69,6 +69,25 @@ public class Cancion {
         return canciones;
     }
 
+    public static JSONArray filtrarCanciones(JSONArray input, String filtro) {
+        JSONArray resp = new JSONArray();
+
+        try {
+            for (int i = 0; i < input.length(); i++) {
+                if (input.getJSONObject(i).get("estado").equals(filtro))
+                {
+                    resp.put(input.get(i));
+                }
+            }
+        }
+        catch(JSONException e)
+        {
+
+        }
+
+        return resp;
+    }
+
 
 
     public String getTitulo()

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.DefaultRetryPolicy;
 
 import com.example.guido.youdj.ListaVotar.ListasCancionesActivity;
 import com.example.guido.youdj.Modelos.Evento;
@@ -88,6 +89,11 @@ public class ElegirEventoActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
         //--------------------------------------------------------

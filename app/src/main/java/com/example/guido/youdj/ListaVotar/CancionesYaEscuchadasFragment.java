@@ -4,11 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +35,9 @@ public class CancionesYaEscuchadasFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<Cancion> canciones;
+    private String cancionesString;
+    CancionYaEscuchadaAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,20 +68,63 @@ public class CancionesYaEscuchadasFragment extends Fragment {
         return fragment;
     }
 
+    public static CancionesYaEscuchadasFragment newInstance(String canciones) {
+        CancionesYaEscuchadasFragment fragment = new CancionesYaEscuchadasFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, canciones);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        */
+
+        if (canciones == null) {
+            if (getArguments() != null) {
+                cancionesString = getArguments().getString(ARG_PARAM1);
+                try {
+                    canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                } catch (JSONException e) {
+                }
+                //mParam2 = getArguments().getString(ARG_PARAM2);
+            }
+        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_canciones_ya_escuchadas, container, false);
+        View view =  inflater.inflate(R.layout.fragment_canciones_ya_escuchadas, container, false);
+
+        // Armo la lista de canciones
+        if (canciones == null) {
+            if (getArguments() != null) {
+                cancionesString = getArguments().getString(ARG_PARAM1);
+                try {
+                    canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                } catch (JSONException e) {
+                }
+                //mParam2 = getArguments().getString(ARG_PARAM2);
+            }
+        }
+
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.rvYaEscuchadas);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(llm);
+
+        adapter = new CancionYaEscuchadaAdapter(canciones);
+        rv.setAdapter(adapter);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
