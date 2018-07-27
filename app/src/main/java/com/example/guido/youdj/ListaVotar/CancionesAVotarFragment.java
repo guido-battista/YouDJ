@@ -1,5 +1,6 @@
 package com.example.guido.youdj.ListaVotar;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -35,7 +36,6 @@ import org.json.JSONException;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CancionesAVotarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link CancionesAVotarFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -69,12 +69,34 @@ public class CancionesAVotarFragment extends Fragment
     }
 
 
+
+    public void recargar (String canciones)
+    {
+        try
+        {
+            this.canciones = Cancion.fromJsonArray(new JSONArray(canciones));
+        }
+        catch (JSONException e)
+        {
+        }
+
+        adapter.canciones = this.canciones;
+        adapter.notifyDataSetChanged();
+    }
+
     public void votarTema(final Cancion cancion)
     {
         //Toast.makeText(getActivity(),"Se va a votar el tema "+cancion.titulo, Toast.LENGTH_SHORT).show();
 
         //Se buscan las canciones en el WS
         //Se llama al WebService
+        //Se activa el progress bar para ir al WS
+        ProgressDialog progressDialog = mListener.getProgressDialog();
+        progressDialog.setTitle("Sumando Voto");
+        progressDialog.setMessage("Actualizando..."); // Setting Message
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+        progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
         String url = getResources().getString(R.string.WsUrl) + "/sumarVoto";
 
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -82,7 +104,7 @@ public class CancionesAVotarFragment extends Fragment
             public void onResponse(String response) {
                 //This code is executed if the server responds, whether or not the response contains data.
                 //The String 'response' contains the server's response.
-                Toast.makeText(getActivity(),"Sumo un voto", Toast.LENGTH_SHORT).show();
+                mListener.recargarPagina();
             }
         }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
             @Override
@@ -112,6 +134,7 @@ public class CancionesAVotarFragment extends Fragment
     private String mParam1;
     private String mParam2;
     private List<Cancion> canciones;
+    CancionVotarAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -224,7 +247,7 @@ public class CancionesAVotarFragment extends Fragment
         */
 
         //*************************************
-        CancionVotarAdapter adapter = new CancionVotarAdapter(canciones, this);
+        adapter = new CancionVotarAdapter(canciones, this);
         rv.setAdapter(adapter);
 
         return view;
@@ -236,8 +259,6 @@ public class CancionesAVotarFragment extends Fragment
             mListener.onFragmentInteraction(uri);
         }
     }
-
-    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -248,7 +269,6 @@ public class CancionesAVotarFragment extends Fragment
                     + " must implement OnFragmentInteractionListener");
         }
     }
-    */
 
     @Override
     public void onDetach() {
@@ -266,8 +286,4 @@ public class CancionesAVotarFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

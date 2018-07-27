@@ -2,6 +2,7 @@ package com.example.guido.youdj.ListaVotar;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 //Import para Volley
 import com.android.volley.Request;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -46,7 +48,75 @@ import com.example.guido.youdj.ListaVotar.ListasCancionesActivity;
 import com.example.guido.youdj.Modelos.Evento;
 import com.example.guido.youdj.Volley.MySingleton;
 
-public class ListasCancionesActivity extends AppCompatActivity {
+public class ListasCancionesActivity extends AppCompatActivity
+    implements OnFragmentInteractionListener{
+
+    @Override
+    public void recargarPagina()
+    {
+        //Recupero el Id de evento de las preferencias
+        SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
+        idEvento = sp.getString("idEvento", "default value");
+
+        //Se buscan las canciones en el WS
+        //Se llama al WebService
+        String url = getResources().getString(R.string.WsUrl) + "/canciones?idEvento=" + idEvento;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url , null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        cancionesVotar = filtrarCanciones(response, "Votar");
+                        cancionesAVotarFragment.recargar(cancionesVotar.toString());
+                        
+                        progressDialog.dismiss();
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        progressDialog.dismiss();
+                    }
+                });
+
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+
+    }
+
+    public JSONArray filtrarCanciones(JSONArray input, String filtro) {
+        JSONArray resp = new JSONArray();
+
+        try {
+            for (int i = 0; i < input.length(); i++) {
+                if (input.getJSONObject(i).get("estado").equals(filtro))
+                {
+                    resp.put(input.get(i));
+                }
+            }
+        }
+        catch(JSONException e)
+        {
+
+        }
+
+        return resp;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri)
+    {
+
+    }
+
+    @Override
+    public ProgressDialog getProgressDialog()
+    {
+        return this.progressDialog;
+    }
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -62,6 +132,8 @@ public class ListasCancionesActivity extends AppCompatActivity {
     public JSONArray cancionesYaEscuchadas;
     public String idEvento;
     ProgressDialog progressDialog;
+    private CancionesAVotarFragment cancionesAVotarFragment;
+    private CancionesYaEscuchadasFragment cancionesYaEscuchadasFragment;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -73,6 +145,7 @@ public class ListasCancionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listas_canciones);
 
+        progressDialog = new ProgressDialog(this);
 
         //Se activa el progress bar para ir al WS
         progressDialog = new ProgressDialog(this);
@@ -98,7 +171,7 @@ public class ListasCancionesActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
 
-                        cancionesVotar = response;
+                        cancionesVotar = filtrarCanciones(response, "Votar");
                         progressDialog.dismiss();
                         crearComponentes();
                     }
@@ -178,10 +251,18 @@ public class ListasCancionesActivity extends AppCompatActivity {
 
             switch (position)
             {
-                case (0): fragment =  CancionesAVotarFragment.newInstance(cancionesVotar.toString());
+                case (0):
+                    {
+                        cancionesAVotarFragment =  CancionesAVotarFragment.newInstance(cancionesVotar.toString());
+                        fragment = cancionesAVotarFragment;
+                    }
                 break;
 
-                case (1): fragment =  CancionesYaEscuchadasFragment.newInstance();
+                case (1):
+                {
+                    cancionesYaEscuchadasFragment = CancionesYaEscuchadasFragment.newInstance();
+                    fragment =  cancionesYaEscuchadasFragment;
+                }
                 break;
             }
 
