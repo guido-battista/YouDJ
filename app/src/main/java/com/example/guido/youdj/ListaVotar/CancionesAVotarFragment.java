@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -205,9 +206,12 @@ public class CancionesAVotarFragment extends Fragment
         }
 
         //ESTO DEBERIA IR EN EL FRAGMENT!!!!!!!!!
+
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        DividerItemDecoration dividerItemeDcoration = new DividerItemDecoration(getActivity(),llm.getOrientation());
         rv.setLayoutManager(llm);
+        rv.addItemDecoration(dividerItemeDcoration);
 
         //* Esto se reemplaza por el webservice
         /*
