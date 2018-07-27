@@ -26,10 +26,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
 import com.example.guido.youdj.Volley.MySingleton;
+import com.example.guido.youdj.Volley.SumarVotoResp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +65,6 @@ public class CancionesAVotarFragment extends Fragment
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity(),"Se apreto NO", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
         //Toast.makeText(getActivity(), canciones.get(position).titulo, Toast.LENGTH_SHORT).show();
@@ -105,7 +106,33 @@ public class CancionesAVotarFragment extends Fragment
             public void onResponse(String response) {
                 //This code is executed if the server responds, whether or not the response contains data.
                 //The String 'response' contains the server's response.
-                mListener.recargarPagina();
+
+                int codigoRetorno = SumarVotoResp.ObtenerCodigo(response);
+                switch (codigoRetorno) {
+
+                    case (0):
+                    {
+                        mListener.recargarPagina();
+                        Toast.makeText(getActivity(),SumarVotoResp.ObtenerDescripcion(response), Toast.LENGTH_SHORT).show();
+
+                    }
+                    break;
+                    case (1):
+                    {
+                        mListener.recargarPagina();
+                        Toast.makeText(getActivity(),"Voto no contabilizado: "+ SumarVotoResp.ObtenerDescripcion(response), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                    case (2):
+                    {
+                        mListener.getProgressDialog().dismiss();
+                        Toast.makeText(getActivity(),"Voto no contabilizado: "+ SumarVotoResp.ObtenerDescripcion(response), Toast.LENGTH_SHORT).show();
+
+                    }
+                    break;
+                }
+
+                //SumarVotoResp.ObtenerCodigo(response);
             }
         }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
             @Override

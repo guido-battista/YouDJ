@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"/>
-        <activity android:name=".ElegirEventoActivity">
+        <activity android:name=".ElegirEventoActivity" android:screenOrientation="portrait">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +22,8 @@
         <activity
             android:name=".ListaVotar.ListasCancionesActivity"
             android:label="@string/title_activity_lista_canciones"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
