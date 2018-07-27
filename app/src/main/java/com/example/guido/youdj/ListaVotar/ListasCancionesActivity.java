@@ -128,6 +128,12 @@ public class ListasCancionesActivity extends AppCompatActivity
     private ViewPager mViewPager;
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        this.moveTaskToBack(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listas_canciones);
@@ -180,6 +186,7 @@ public class ListasCancionesActivity extends AppCompatActivity
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
     }
+
 
     protected void crearComponentes()
     {

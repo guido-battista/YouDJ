@@ -48,6 +48,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/text_votos_round"
                 />
 

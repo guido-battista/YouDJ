@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.support.v7.widget.DividerItemDecoration;
 
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
@@ -119,7 +120,9 @@ public class CancionesYaEscuchadasFragment extends Fragment {
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rvYaEscuchadas);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        DividerItemDecoration dividerItemeDcoration = new DividerItemDecoration(getActivity(),llm.getOrientation());
         rv.setLayoutManager(llm);
+        rv.addItemDecoration(dividerItemeDcoration);
 
         adapter = new CancionYaEscuchadaAdapter(canciones);
         rv.setAdapter(adapter);
