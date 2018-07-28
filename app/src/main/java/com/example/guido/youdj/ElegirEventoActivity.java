@@ -139,10 +139,15 @@ public class ElegirEventoActivity extends AppCompatActivity {
         }
 
         //Guardo el Id de evento en las preferencias
+        /*
         SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("idEvento", evento.id);
         editor.apply();
+        */
+
+        Funciones.setStringPreference(this, "idEvento", evento.id);
+        Funciones.setLongPreference(this, "intervalo", evento.intervalo);
         //------------------------------------------
 
         Intent i = new Intent(this, ListasCancionesActivity.class);

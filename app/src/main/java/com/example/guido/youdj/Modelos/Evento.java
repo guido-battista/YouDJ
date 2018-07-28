@@ -8,7 +8,7 @@ public class Evento {
     public String codigo;
     public String estado;
     public String pass;
-    public String intervalo;
+    public long intervalo;
     public String enPausa;
 
     public static Evento fromJson (JSONObject json)
@@ -26,7 +26,7 @@ public class Evento {
             if (json.has("pass"))
                 evento.pass = json.getString("pass");
             if (json.has("intervalo"))
-                evento.intervalo = json.getString("intervalo");
+                evento.intervalo = json.getLong("intervalo");
             if (json.has("enPausa"))
                 evento.enPausa = json.getString("enPausa");
         }

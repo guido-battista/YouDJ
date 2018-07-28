@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
+
+import com.example.guido.youdj.Funciones;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
 
@@ -151,8 +153,12 @@ public class ListasCancionesActivity extends AppCompatActivity
 
 
         //Recupero el Id de evento de las preferencias
+        /*
         SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
         idEvento = sp.getString("idEvento", "default value");
+        */
+
+        idEvento = Funciones.getStringPreference(this,"idEvento");
 
         //Se buscan las canciones en el WS
         //Se llama al WebService

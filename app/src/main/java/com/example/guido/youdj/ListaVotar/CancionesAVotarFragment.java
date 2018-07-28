@@ -3,6 +3,7 @@ package com.example.guido.youdj.ListaVotar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.DividerItemDecoration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.example.guido.youdj.Funciones;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
 import com.example.guido.youdj.Volley.MySingleton;
@@ -51,6 +54,25 @@ public class CancionesAVotarFragment extends Fragment
     @Override
     public void onClick(View view, int position, boolean isLongClick)
     {
+        //Si existe un ultimo voto, se valida el tiempo transcurrido
+        if (Funciones.preferenceContains(getActivity(), "ultimoVoto" ))
+        {
+            Long ultimoVoto = Funciones.getLongPreference(getActivity(),"ultimoVoto");
+
+            Date dateNow = new Date();
+            Long horaActual = dateNow.getTime();
+            Long tiempoUltimoVoto = (horaActual - ultimoVoto) / 1000;
+
+            Long intervalo = Funciones.getLongPreference(getActivity(), "intervalo");
+
+            if (tiempoUltimoVoto < intervalo)
+            {
+                Toast.makeText(getActivity(),"Aún no han pasado " + intervalo.toString() + " segundos desde su último voto", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
         final int pos = position;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Desea votar este tema")
@@ -88,6 +110,10 @@ public class CancionesAVotarFragment extends Fragment
 
     public void votarTema(final Cancion cancion)
     {
+
+        Date fecha1 = new Date();
+        long horaActual = fecha1.getTime();
+
         //Toast.makeText(getActivity(),"Se va a votar el tema "+cancion.titulo, Toast.LENGTH_SHORT).show();
 
         //Se buscan las canciones en el WS
@@ -112,6 +138,8 @@ public class CancionesAVotarFragment extends Fragment
 
                     case (0):
                     {
+                        Date ahora = new Date();
+                        Funciones.setLongPreference(getActivity(), "ultimoVoto", ahora.getTime());
                         mListener.recargarPagina();
                         Toast.makeText(getActivity(),SumarVotoResp.ObtenerDescripcion(response), Toast.LENGTH_SHORT).show();
 
