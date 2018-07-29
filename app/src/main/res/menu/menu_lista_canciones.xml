@@ -24,5 +24,6 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Cambiar de Evento"
+        android:onClick="onClickCambiarEvento"
         app:showAsAction="never" />
 </menu>

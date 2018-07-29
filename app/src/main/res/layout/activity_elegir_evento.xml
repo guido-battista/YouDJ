@@ -62,7 +62,7 @@
             android:layout_weight="0"
             android:gravity="center"
             android:inputType="text|textNoSuggestions"
-            android:maxLines="1" />/>
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/button"
