@@ -1,4 +1,4 @@
-package com.example.guido.youdj.ListaVotar;
+package com.example.guido.youdj.Vistas.ListaVotar;
 
 import android.app.ProgressDialog;
 import android.net.Uri;

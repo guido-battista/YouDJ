@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"/>
-        <activity android:name=".ElegirEventoActivity" android:screenOrientation="portrait"
+        <activity android:name=".Vistas.ElegirEventoActivity" android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">>
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,7 @@
         </intent-filter>
         </activity>
         <activity
-            android:name=".ListaVotar.ListasCancionesActivity"
+            android:name=".Vistas.ListaVotar.ListasCancionesActivity"
             android:label="@string/title_activity_lista_canciones"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"></activity>

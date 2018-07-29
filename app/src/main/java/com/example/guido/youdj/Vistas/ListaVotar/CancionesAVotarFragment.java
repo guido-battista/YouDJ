@@ -1,9 +1,8 @@
-package com.example.guido.youdj.ListaVotar;
+package com.example.guido.youdj.Vistas.ListaVotar;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,24 +14,21 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.DividerItemDecoration;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.guido.youdj.Funciones;
 import com.example.guido.youdj.Modelos.Cancion;
 import com.example.guido.youdj.R;
+import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
 import com.example.guido.youdj.Volley.SumarVotoResp;
 
@@ -166,7 +162,8 @@ public class CancionesAVotarFragment extends Fragment
             @Override
             public void onErrorResponse(VolleyError error) {
                 //This code is executed if there is an error.
-                Toast.makeText(getActivity(),"Hubo un error", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Hubo un error", Toast.LENGTH_SHORT).show();
+                ErrorManager.mostrarErrorConexion(getActivity());
             }
         }) {
             protected Map<String, String> getParams() {

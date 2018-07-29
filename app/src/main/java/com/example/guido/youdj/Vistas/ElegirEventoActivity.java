@@ -1,6 +1,6 @@
-package com.example.guido.youdj;
+package com.example.guido.youdj.Vistas;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,8 +20,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.DefaultRetryPolicy;
 
-import com.example.guido.youdj.ListaVotar.ListasCancionesActivity;
+import com.example.guido.youdj.Funciones;
+import com.example.guido.youdj.Vistas.ListaVotar.ListasCancionesActivity;
 import com.example.guido.youdj.Modelos.Evento;
+import com.example.guido.youdj.R;
+import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
 
 public class ElegirEventoActivity extends AppCompatActivity {
@@ -60,6 +63,7 @@ public class ElegirEventoActivity extends AppCompatActivity {
 
         //------------------------------------------------
 
+        final Context context = this;
 
         //Se activa el progress bar
         progressDialog = new ProgressDialog(this);
@@ -88,6 +92,7 @@ public class ElegirEventoActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
                         progressDialog.dismiss();
+                        ErrorManager.mostrarErrorConexion(context);
                     }
                 });
 
@@ -129,13 +134,13 @@ public class ElegirEventoActivity extends AppCompatActivity {
     {
         if (evento._id.equals("null"))
         {
-            Toast.makeText(getApplicationContext(),"El evento ingresado no existe",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"El evento ingresado no existe",Toast.LENGTH_SHORT).show();
             return;
         }
 
         else if (!evento.codigo.equals(codigoEvento.getText().toString().trim()))
         {
-            Toast.makeText(getApplicationContext(),"Codigo de Evento Incorrecto",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Codigo de Evento Incorrecto",Toast.LENGTH_SHORT).show();
             return;
         }
 

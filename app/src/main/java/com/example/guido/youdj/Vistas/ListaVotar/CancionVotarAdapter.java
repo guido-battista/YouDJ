@@ -1,9 +1,8 @@
-package com.example.guido.youdj.ListaVotar;
+package com.example.guido.youdj.Vistas.ListaVotar;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.CardView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
 import com.example.guido.youdj.R;

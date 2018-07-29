@@ -1,6 +1,5 @@
-package com.example.guido.youdj.ListaVotar;
+package com.example.guido.youdj.Vistas.ListaVotar;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
