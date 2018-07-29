@@ -7,6 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -94,13 +101,15 @@ public class CancionesAVotarFragment extends Fragment
     {
         try
         {
+            //Duplico las listas para poder aplicar un filter despues
             this.canciones = Cancion.fromJsonArray(new JSONArray(canciones));
+            this.cancionesFiltradas = Cancion.fromJsonArray(new JSONArray(canciones));
         }
         catch (JSONException e)
         {
         }
 
-        adapter.canciones = this.canciones;
+        adapter.canciones = this.cancionesFiltradas;
         adapter.notifyDataSetChanged();
     }
 
@@ -187,12 +196,20 @@ public class CancionesAVotarFragment extends Fragment
     private String mParam1;
     private String mParam2;
     private List<Cancion> canciones;
+    private List<Cancion> cancionesFiltradas;
     CancionVotarAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
 
     public CancionesAVotarFragment() {
         // Required empty public constructor
+    }
+
+    public void filtrarCanciones(String texto)
+    {
+        cancionesFiltradas = Cancion.filtarCancionesPorTitulo(canciones, texto);
+        adapter.canciones = this.cancionesFiltradas;
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -232,6 +249,7 @@ public class CancionesAVotarFragment extends Fragment
                 cancionesString = getArguments().getString(ARG_PARAM1);
                 try {
                     canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                    cancionesFiltradas = Cancion.fromJsonArray(new JSONArray(cancionesString));
                 } catch (JSONException e) {
                 }
                 //mParam2 = getArguments().getString(ARG_PARAM2);
@@ -245,12 +263,36 @@ public class CancionesAVotarFragment extends Fragment
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_canciones_avotar, container, false);
 
+        //Creo el filter de canciones
+        EditText filterCanciones = view.findViewById(R.id.filterCanciones);
+        //filterCanciones.setFocusable(false);
+        filterCanciones.setOnEditorActionListener(new DoneOnEditorActionListener());
+
+        filterCanciones.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filtrarCanciones(s.toString().trim());
+            }
+        });
+
         // Armo la lista de canciones
         if (canciones == null) {
             if (getArguments() != null) {
                 cancionesString = getArguments().getString(ARG_PARAM1);
                 try {
+                    //Duplico la listas para poder aplicar un filtro despues
                     canciones = Cancion.fromJsonArray(new JSONArray(cancionesString));
+                    cancionesFiltradas = Cancion.fromJsonArray(new JSONArray(cancionesString));
                 } catch (JSONException e) {
                 }
                 //mParam2 = getArguments().getString(ARG_PARAM2);
@@ -302,8 +344,9 @@ public class CancionesAVotarFragment extends Fragment
         canciones.add(cancion);
         */
 
+
         //*************************************
-        adapter = new CancionVotarAdapter(canciones, this);
+        adapter = new CancionVotarAdapter(cancionesFiltradas, this);
         rv.setAdapter(adapter);
 
         return view;
@@ -342,4 +385,19 @@ public class CancionesAVotarFragment extends Fragment
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
+    class DoneOnEditorActionListener implements TextView.OnEditorActionListener {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                EditText filter = getActivity().findViewById(R.id.filterCanciones);
+                filter.clearFocus();
+                return true;
+            }
+            return false;
+        }
+    }
+
 }

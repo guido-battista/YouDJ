@@ -6,6 +6,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cancion {
 
@@ -88,6 +89,19 @@ public class Cancion {
         return resp;
     }
 
+    public static List<Cancion> filtarCancionesPorTitulo (List<Cancion> lista, final String filtro)
+    {
+        List<Cancion> listaFiltrada = new ArrayList<>();
+
+        for (Cancion cancion:lista)
+        {
+            if (cancion.titulo.toLowerCase().contains(filtro))
+            {
+                listaFiltrada.add(cancion);
+            }
+        }
+        return  listaFiltrada;
+    }
 
 
     public String getTitulo()
@@ -99,4 +113,5 @@ public class Cancion {
     {
         return this.votos;
     }
+
 }

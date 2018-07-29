@@ -12,6 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:inputType="text"
+        android:drawableLeft="@drawable/ic_search"
+        android:imeOptions="actionSearch"
         android:maxLines="1" />
 
     <!-- TODO: Update blank fragment layout -->
