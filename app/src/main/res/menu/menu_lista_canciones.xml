@@ -21,9 +21,17 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_search"
+        android:orderInCategory="100"
+        android:title="Buscar"
+        android:onClick="onClickBuscar"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Cambiar de Evento"
         android:onClick="onClickCambiarEvento"
         app:showAsAction="never" />
+
 </menu>

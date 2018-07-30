@@ -19,7 +19,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
@@ -48,6 +51,13 @@ public class ListasCancionesActivity extends AppCompatActivity
     @Override
     public void recargarPagina()
     {
+
+        //Se limpia el cuadro de busqueda
+        limpiarBusqueda();
+
+        //EditText filterCanciones = findViewById(R.id.filterCanciones);
+        //filterCanciones.clearFocus();
+
         //Recupero el Id de evento de las preferencias
         SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
         idEvento = sp.getString("idEvento", "default value");
@@ -63,8 +73,13 @@ public class ListasCancionesActivity extends AppCompatActivity
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        //Actualizo canciones a Votar
                         cancionesVotar = Cancion.filtrarCanciones(response, "Votar");
                         cancionesAVotarFragment.recargar(cancionesVotar.toString());
+
+                        //Actualizo canciones ya escuchadas
+                        cancionesYaEscuchadas = Cancion.filtrarCanciones(response, "Escuchada");
+                        cancionesYaEscuchadasFragment.recargar(cancionesYaEscuchadas.toString());
 
                         progressDialog.dismiss();
 
@@ -285,7 +300,6 @@ public class ListasCancionesActivity extends AppCompatActivity
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
         progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);
-
         recargarPagina();
         return;
     }
@@ -372,9 +386,34 @@ public class ListasCancionesActivity extends AppCompatActivity
         return;
     }
 
+    public void reiniciarBusquedaClick(View v)
+    {
+        limpiarBusqueda();
+        cancionesAVotarFragment.reiniciarBusqueda();
+        return;
+    }
+
+    public void limpiarBusqueda()
+    {
+        EditText filter = findViewById(R.id.filterCanciones);
+        filter.setText("");
+        filter.onEditorAction(EditorInfo.IME_ACTION_DONE);
+        filter.clearFocus();
+        RelativeLayout layoutBuscar = findViewById(R.id.layoutBusqueda);
+        layoutBuscar.setVisibility(View.GONE);
+    }
+
     public void onClickCambiarEvento(MenuItem menuItem)
     {
         finish();
+    }
+
+    public void onClickBuscar (MenuItem menuItem)
+    {
+        RelativeLayout layoutBuscar = findViewById(R.id.layoutBusqueda);
+        layoutBuscar.setVisibility(View.VISIBLE);
+        EditText filter = findViewById(R.id.filterCanciones);
+        filter.requestFocus();
     }
 
 }

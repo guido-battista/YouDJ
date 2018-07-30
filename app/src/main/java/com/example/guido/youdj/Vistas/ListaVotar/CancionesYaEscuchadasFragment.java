@@ -169,4 +169,19 @@ public class CancionesYaEscuchadasFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    public void recargar (String canciones)
+    {
+        try
+        {
+            //Duplico las listas para poder aplicar un filter despues
+            this.canciones = Cancion.fromJsonArray(new JSONArray(canciones));
+        }
+        catch (JSONException e)
+        {
+        }
+
+        adapter.canciones = this.canciones;
+        adapter.notifyDataSetChanged();
+    }
 }

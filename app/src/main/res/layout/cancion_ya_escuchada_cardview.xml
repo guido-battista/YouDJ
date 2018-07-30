@@ -21,8 +21,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/cancionYaEscuchadaTitutlo"
+                android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/cancionYaEscuchadaVotos"
                 android:layout_centerVertical="true"
+                android:gravity="start"
                 android:textSize="15dp"
                 />
 
@@ -35,7 +37,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/text_votos_round"
                 />
 

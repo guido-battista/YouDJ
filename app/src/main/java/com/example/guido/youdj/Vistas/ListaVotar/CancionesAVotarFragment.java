@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +26,7 @@ import java.util.Map;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,13 +80,13 @@ public class CancionesAVotarFragment extends Fragment
 
         final int pos = position;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Desea votar este tema")
-                .setMessage(canciones.get(position).titulo)
+        builder.setTitle("¿Desea votar este tema?")
+                .setMessage(cancionesFiltradas.get(position).titulo)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Toast.makeText(getActivity(),"Se apreto SI", Toast.LENGTH_SHORT).show();
-                        votarTema(canciones.get(pos));
+                        votarTema(cancionesFiltradas.get(pos));
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -212,6 +214,14 @@ public class CancionesAVotarFragment extends Fragment
         adapter.notifyDataSetChanged();
     }
 
+    public void reiniciarBusqueda()
+    {
+        cancionesFiltradas = canciones;
+        adapter.canciones = this.cancionesFiltradas;
+        adapter.notifyDataSetChanged();
+
+    }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -264,10 +274,11 @@ public class CancionesAVotarFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_canciones_avotar, container, false);
 
         //Creo el filter de canciones
+        //EditText filterCanciones = view.findViewById(R.id.filterCanciones);
         EditText filterCanciones = view.findViewById(R.id.filterCanciones);
         //filterCanciones.setFocusable(false);
-        filterCanciones.setOnEditorActionListener(new DoneOnEditorActionListener());
 
+        filterCanciones.setOnEditorActionListener(new DoneOnEditorActionListener());
         filterCanciones.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -399,5 +410,4 @@ public class CancionesAVotarFragment extends Fragment
             return false;
         }
     }
-
 }
