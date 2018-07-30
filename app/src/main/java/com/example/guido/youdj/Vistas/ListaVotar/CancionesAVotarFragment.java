@@ -127,8 +127,8 @@ public class CancionesAVotarFragment extends Fragment
         //Se llama al WebService
         //Se activa el progress bar para ir al WS
         ProgressDialog progressDialog = mListener.getProgressDialog();
-        progressDialog.setTitle("Sumando Voto");
-        progressDialog.setMessage("Actualizando..."); // Setting Message
+        //progressDialog.setTitle("Sumando Voto");
+        progressDialog.setMessage("Sumando voto..."); // Setting Message
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
         progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);

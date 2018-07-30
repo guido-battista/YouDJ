@@ -153,7 +153,7 @@ public class ListasCancionesActivity extends AppCompatActivity
         //Se activa el progress bar para ir al WS
         progressDialog = new ProgressDialog(this);
         //progressDialog.setMessage("Buscando..."); // Setting Message
-        progressDialog.setTitle("Cargando canciones"); // Setting Title
+        progressDialog.setMessage("Cargando canciones"); // Setting Title
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
         progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);
