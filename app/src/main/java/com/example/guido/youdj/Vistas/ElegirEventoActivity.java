@@ -24,9 +24,19 @@ import com.android.volley.DefaultRetryPolicy;
 import com.example.guido.youdj.Funciones;
 import com.example.guido.youdj.Vistas.ListaVotar.ListasCancionesActivity;
 import com.example.guido.youdj.Modelos.Evento;
+
 import com.example.guido.youdj.R;
 import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
+
+//Firebase
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.graphics.Color;
+import com.example.guido.youdj.Firebase.Constants;
+import com.example.guido.youdj.Firebase.MyNotificationManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class ElegirEventoActivity extends AppCompatActivity {
 
@@ -41,7 +51,6 @@ public class ElegirEventoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_elegir_evento);
         nroEvento = (TextView) findViewById(R.id.nroEvento);
         codigoEvento = (TextView) findViewById(R.id.codigoEvento);
-
     }
 
     public void buttonClick(View v) {
@@ -156,6 +165,10 @@ public class ElegirEventoActivity extends AppCompatActivity {
         Funciones.setStringPreference(this, "idEvento", evento.id);
         Funciones.setLongPreference(this, "intervalo", evento.intervalo);
         //------------------------------------------
+
+        String topic = evento.id + "-prueba";
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        //Toast.makeText(getApplicationContext(), "Topic Subscribed <" + topic + ">", Toast.LENGTH_LONG).show();
 
         Intent i = new Intent(this, ListasCancionesActivity.class);
         startActivity(i);

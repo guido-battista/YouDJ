@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
@@ -44,6 +45,7 @@ import com.android.volley.VolleyError;
 import com.example.guido.youdj.Volley.CancionSonandoResp;
 import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class ListasCancionesActivity extends AppCompatActivity
     implements OnFragmentInteractionListener{
@@ -414,6 +416,28 @@ public class ListasCancionesActivity extends AppCompatActivity
         layoutBuscar.setVisibility(View.VISIBLE);
         EditText filter = findViewById(R.id.filterCanciones);
         filter.requestFocus();
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        unsuscribeTopics();
+
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        Toast.makeText(this, "Se llamo onStop", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void unsuscribeTopics()
+    {
+        String topic = idEvento + "-prueba";
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
 
 }
