@@ -57,6 +57,22 @@ public class Funciones {
         return;
     }
 
+    public static boolean getBooleanPrefences (Context context, String clave) {
+
+        SharedPreferences sp = context.getSharedPreferences ("mis_preferencias", MODE_PRIVATE);
+        return sp.getBoolean(clave, false);
+    }
+
+    public static void setBooleanPreference (Context context, String clave, Boolean valor)
+    {
+        SharedPreferences sp = context.getSharedPreferences("mis_preferencias", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(clave, valor);
+        editor.apply();
+
+        return;
+    }
+
     public static boolean preferenceContains (Context context, String clave)
     {
         SharedPreferences sp = context.getSharedPreferences("mis_preferencias", MODE_PRIVATE);
@@ -79,5 +95,4 @@ public class Funciones {
         String topic = idEvento + claveTopic;
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
-
 }

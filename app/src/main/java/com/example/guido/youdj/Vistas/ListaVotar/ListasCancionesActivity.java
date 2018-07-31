@@ -1,5 +1,6 @@
 package com.example.guido.youdj.Vistas.ListaVotar;
 
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -49,6 +50,9 @@ import com.example.guido.youdj.Volley.CancionSonandoResp;
 import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListasCancionesActivity extends AppCompatActivity
     implements OnFragmentInteractionListener{
@@ -151,6 +155,8 @@ public class ListasCancionesActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        revisarNotificaciones();
 
         setContentView(R.layout.activity_listas_canciones);
 
@@ -431,5 +437,71 @@ public class ListasCancionesActivity extends AppCompatActivity
         layoutBuscar.setVisibility(View.VISIBLE);
         EditText filter = findViewById(R.id.filterCanciones);
         filter.requestFocus();
+    }
+
+    public void onClickNotificaciones(MenuItem menuItem)
+    {
+
+        Dialog dialog;
+        final String[] items = {" Avisos de Voto"};
+        final boolean[] checkedItems = {Funciones.getBooleanPrefences(this,"notificacion_aviso_voto")};
+        final ArrayList itemsSelected = new ArrayList();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Notificaciones a recibir");
+        builder.setMultiChoiceItems(items, checkedItems ,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedItemId,
+                                        boolean isSelected) {
+                        if (isSelected) {
+                            itemsSelected.add(selectedItemId);
+                        } else if (itemsSelected.contains(selectedItemId)) {
+                            itemsSelected.remove(Integer.valueOf(selectedItemId));
+                        }
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Your logic when OK button is clicked
+                        habilitarDeshabilitarNotificaciones(itemsSelected);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void habilitarDeshabilitarNotificaciones(ArrayList lista)
+    {
+        for (int i=0; i<1;i++)
+        {
+            switch (i)
+            {
+                case (0):
+                {
+                    String topic = idEvento + getResources().getString(R.string.notificacion_votar);
+                    if (lista.contains(i)) {
+                        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+                        Funciones.setBooleanPreference(this, "notificacion_aviso_voto",true);
+                    }
+                    else {
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+                        Funciones.setBooleanPreference(this, "notificacion_aviso_voto",false);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public void revisarNotificaciones()
+    {
+        if (!Funciones.preferenceContains(this,"notificacion_aviso_voto"))
+            Funciones.setBooleanPreference(this,"notificacion_aviso_voto", true);
     }
 }

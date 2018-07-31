@@ -31,15 +31,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+
+        //Se limpian todas las notificaciones
+        /*
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(Context.
+                        NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        */
+        //------------------------------------
+
         String titulo;
         String descripcion;
         String topic;
-
         //if the message contains data payload
         //It is a map of custom keyvalues
         //we can read it easily
-        if(remoteMessage.getData().size() > 0){
+        if(remoteMessage.getData().size() > 0) {
             //handle the data message here
+            /*
+            titulo = remoteMessage.getData().get("titulo");
+            descripcion = remoteMessage.getData().get("descripcion");
+            */
             titulo = remoteMessage.getData().get("titulo");
             descripcion = remoteMessage.getData().get("descripcion");
             topic = remoteMessage.getData().get("topic");
@@ -49,33 +62,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 case ("votar"):
                 {
                     sendVotarNotification(titulo, descripcion);
-
                 }
-                break;
             }
         }
         else
         {
             titulo = remoteMessage.getNotification().getTitle();
             descripcion = remoteMessage.getNotification().getBody();
+            topic = remoteMessage.getFrom();
 
             if (remoteMessage.getNotification() != null) {
-                sendVotarNotification(titulo, descripcion);
+                if (topic.contains("votar"))
+                    sendVotarNotification(titulo, descripcion);
+
+                //sendVotarNotification(titulo, descripcion);
             }
 
         }
-
-        //getting the title and the body
-        //String title = remoteMessage.getNotification().getTitle();
-        //String body = remoteMessage.getNotification().getBody();
-
-        //then here we can use the title and body to build a notification
-
-        //Agrego el ejemplo de la clase
-        //if (remoteMessage.getNotification() != null) {
-        //    sendNotification(remoteMessage.getNotification().getBody());
-        //}
-
     }
 
     private void sendVotarNotification(String titulo, String descripcion) {
@@ -97,8 +100,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, Constants.CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("¡No dejes de votar!")
-                .setContentText("Revisa la lista y votá el próximo tema")
+                .setContentTitle(titulo)
+                .setContentText(descripcion)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(resultPendingIntent);

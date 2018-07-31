@@ -28,6 +28,13 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_notificaciones"
+        android:orderInCategory="100"
+        android:title="Notificaciones"
+        android:onClick="onClickNotificaciones"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_salir"
         android:orderInCategory="100"
         android:title="Salir del Evento"
