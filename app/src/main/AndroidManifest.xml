@@ -11,34 +11,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".Vistas.ElegirEventoActivity" android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">>
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".Vistas.ElegirEventoActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
         <activity
             android:name=".Vistas.ListaVotar.ListasCancionesActivity"
             android:label="@string/title_activity_lista_canciones"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"></activity>
+            android:parentActivityName=".Vistas.ElegirEventoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <service
-            android:name=".Firebase.MyFirebaseInstanceIdService">
+        <service android:name=".Firebase.MyFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name=".Firebase.MyFirebaseMessagingService">
+        <activity android:name=".Vistas.SplashActivity"
+            android:theme="@style/SplashTheme">>
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </service>
+        </activity>
     </application>
 
 </manifest>

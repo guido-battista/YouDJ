@@ -1,8 +1,10 @@
 package com.example.guido.youdj.Vistas.ListaVotar;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -42,6 +44,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import com.example.guido.youdj.Vistas.ElegirEventoActivity;
 import com.example.guido.youdj.Volley.CancionSonandoResp;
 import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
@@ -148,6 +151,7 @@ public class ListasCancionesActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_listas_canciones);
 
         progressDialog = new ProgressDialog(this);
@@ -241,7 +245,7 @@ public class ListasCancionesActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_salir) {
             return true;
         }
 
@@ -405,8 +409,19 @@ public class ListasCancionesActivity extends AppCompatActivity
         layoutBuscar.setVisibility(View.GONE);
     }
 
-    public void onClickCambiarEvento(MenuItem menuItem)
+    public void onClickSalirEvento(MenuItem menuItem)
     {
+        //Se limpian todas las notificaciones
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(Context.
+                        NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        //------------------------------------
+
+        Funciones.unsuscribeAll(this);
+        Funciones.preferencesRemoveKey(this, getResources().getString(R.string.preferences_id_evento));
+        Intent i = new Intent(this, ElegirEventoActivity.class);
+        startActivity(i);
         finish();
     }
 
@@ -417,27 +432,4 @@ public class ListasCancionesActivity extends AppCompatActivity
         EditText filter = findViewById(R.id.filterCanciones);
         filter.requestFocus();
     }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        unsuscribeTopics();
-
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        Toast.makeText(this, "Se llamo onStop", Toast.LENGTH_SHORT).show();
-
-    }
-
-    public void unsuscribeTopics()
-    {
-        String topic = idEvento + "-prueba";
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-    }
-
 }

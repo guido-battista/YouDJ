@@ -30,18 +30,12 @@ import com.example.guido.youdj.Volley.ErrorManager;
 import com.example.guido.youdj.Volley.MySingleton;
 
 //Firebase
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.graphics.Color;
-import com.example.guido.youdj.Firebase.Constants;
-import com.example.guido.youdj.Firebase.MyNotificationManager;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class ElegirEventoActivity extends AppCompatActivity {
 
-    private TextView nroEvento;
-    private TextView codigoEvento;
+    private EditText nroEvento;
+    private EditText codigoEvento;
     ProgressDialog progressDialog;
 
     @Override
@@ -49,8 +43,8 @@ public class ElegirEventoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_elegir_evento);
-        nroEvento = (TextView) findViewById(R.id.nroEvento);
-        codigoEvento = (TextView) findViewById(R.id.codigoEvento);
+        nroEvento = (EditText) findViewById(R.id.nroEvento);
+        codigoEvento = (EditText) findViewById(R.id.codigoEvento);
     }
 
     public void buttonClick(View v) {
@@ -166,13 +160,20 @@ public class ElegirEventoActivity extends AppCompatActivity {
         Funciones.setLongPreference(this, "intervalo", evento.intervalo);
         //------------------------------------------
 
-        String topic = evento.id + "-prueba";
+        String topic = evento.id + getResources().getString(R.string.notificacion_votar);
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         //Toast.makeText(getApplicationContext(), "Topic Subscribed <" + topic + ">", Toast.LENGTH_LONG).show();
 
         Intent i = new Intent(this, ListasCancionesActivity.class);
         startActivity(i);
+        nroEvento.setText("");
+        codigoEvento.setText("");
+    }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        this.moveTaskToBack(true);
     }
 
 }

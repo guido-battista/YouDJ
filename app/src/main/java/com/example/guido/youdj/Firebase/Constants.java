@@ -6,7 +6,7 @@ package com.example.guido.youdj.Firebase;
 
 public class Constants {
 
-    public static final String CHANNEL_ID = "my_channel_01";
-    public static final String CHANNEL_NAME = "Simplified Coding Notification";
-    public static final String CHANNEL_DESCRIPTION = "www.simplifiedcoding.net";
+    public static final String CHANNEL_ID = "you_dj_01";
+    public static final String CHANNEL_NAME = "Notificaciones de YouDJ";
+    public static final String CHANNEL_DESCRIPTION = "vys-server.herokuapp.com";
 }

@@ -28,10 +28,10 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_salir"
         android:orderInCategory="100"
-        android:title="Cambiar de Evento"
-        android:onClick="onClickCambiarEvento"
+        android:title="Salir del Evento"
+        android:onClick="onClickSalirEvento"
         app:showAsAction="never" />
 
 </menu>

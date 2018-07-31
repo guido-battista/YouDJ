@@ -11,4 +11,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="notificacion_votar">-votar</string>
+    <string name="notificacion_pausa">-pausa</string>
+    <string name="notificacion_resume">-resume</string>
+    <string name="notificacion_cancion_sonando">-sonando</string>
+
+    <string name="preferences_id_evento">idEvento</string>
+    <string name="preferences_intervalo">intervalo</string>
 </resources>
