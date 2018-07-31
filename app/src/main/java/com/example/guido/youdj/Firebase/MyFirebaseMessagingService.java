@@ -1,6 +1,7 @@
 package com.example.guido.youdj.Firebase;
 
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -63,6 +64,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 {
                     sendVotarNotification(titulo, descripcion);
                 }
+                break;
+
+                case ("sonando"):
+                {
+                    sendSonandoNotification(titulo, descripcion);
+                }
+                break;
             }
         }
         else
@@ -74,6 +82,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (remoteMessage.getNotification() != null) {
                 if (topic.contains("votar"))
                     sendVotarNotification(titulo, descripcion);
+                if (topic.contains("sonando"))
+                    sendSonandoNotification(titulo, descripcion);
 
                 //sendVotarNotification(titulo, descripcion);
             }
@@ -104,6 +114,48 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(descripcion)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentIntent(resultPendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(Constants.CHANNEL_ID,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        int notificationId = 0;
+        notificationManager.notify(notificationId, notificationBuilder.build());
+    }
+
+    //Este metodo es muy parecido al de arriba, pero por ahora lo duplico
+    private void sendSonandoNotification(String titulo, String descripcion) {
+        Intent intent = new Intent(this, ListasCancionesActivity.class);
+
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(intent);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        int requestCode = 0;
+
+        //PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+        //        PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, Constants.CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(titulo)
+                .setContentText(descripcion)
+                .setAutoCancel(true)
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setSound(defaultSoundUri)
                 .setContentIntent(resultPendingIntent);
 
         NotificationManager notificationManager =
@@ -116,7 +168,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
-        int notificationId = 0;
+        int notificationId = 1;
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
 }

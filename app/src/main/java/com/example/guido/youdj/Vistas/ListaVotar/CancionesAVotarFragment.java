@@ -72,7 +72,8 @@ public class CancionesAVotarFragment extends Fragment
 
             if (tiempoUltimoVoto < intervalo)
             {
-                Toast.makeText(getActivity(),"Aún no han pasado " + intervalo.toString() + " segundos desde su último voto", Toast.LENGTH_SHORT).show();
+                Long tiempoEspera = intervalo - tiempoUltimoVoto;
+                Toast.makeText(getActivity(),"Debe esperar " + tiempoEspera.toString() + " segundos para volver a votar", Toast.LENGTH_SHORT).show();
                 return;
             }
 

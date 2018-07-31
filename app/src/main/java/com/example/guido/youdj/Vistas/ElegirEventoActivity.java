@@ -186,6 +186,14 @@ public class ElegirEventoActivity extends AppCompatActivity {
             String topic = eventoId + getResources().getString(R.string.notificacion_votar);
             FirebaseMessaging.getInstance().subscribeToTopic(topic);
         }
+
+        //Notificaciones de aviso para votar
+        if (!Funciones.preferenceContains(this, "notificacion_cancion_sonando") ||
+                Funciones.getBooleanPrefences(this, "notificacion_cancion_sonando"))
+        {
+            String topic = eventoId + getResources().getString(R.string.notificacion_cancion_sonando);
+            FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        }
     }
 }
 

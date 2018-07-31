@@ -140,6 +140,7 @@ public class ListasCancionesActivity extends AppCompatActivity
     ProgressDialog progressDialog;
     private CancionesAVotarFragment cancionesAVotarFragment;
     private CancionesYaEscuchadasFragment cancionesYaEscuchadasFragment;
+    private ArrayList notificacionesActivas;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -172,6 +173,20 @@ public class ListasCancionesActivity extends AppCompatActivity
         //------------------------------------------------
 
 
+        //Genero lista de itemsSeleccionados
+        notificacionesActivas = new ArrayList();
+        if (!Funciones.preferenceContains(this, "notificacion_aviso_voto") ||
+                Funciones.getBooleanPrefences(this, "notificacion_aviso_voto"))
+        {
+            notificacionesActivas.add(0);
+        }
+
+        //Notificaciones de aviso para votar
+        if (!Funciones.preferenceContains(this, "notificacion_cancion_sonando") ||
+                Funciones.getBooleanPrefences(this, "notificacion_cancion_sonando"))
+        {
+            notificacionesActivas.add(1);
+        }
         //Recupero el Id de evento de las preferencias
         /*
         SharedPreferences sp = getSharedPreferences("mis_preferencias", MODE_PRIVATE);
@@ -443,20 +458,21 @@ public class ListasCancionesActivity extends AppCompatActivity
     {
 
         Dialog dialog;
-        final String[] items = {" Avisos de Voto"};
-        final boolean[] checkedItems = {Funciones.getBooleanPrefences(this,"notificacion_aviso_voto")};
-        final ArrayList itemsSelected = new ArrayList();
+        final String[] items = {" Avisos de Voto","Canción Sonando"};
+        final boolean[] checkedItems = {Funciones.getBooleanPrefences(this,"notificacion_aviso_voto"),
+                                        Funciones.getBooleanPrefences(this,"notificacion_cancion_sonando")};
+        //final ArrayList itemsSelected = new ArrayList();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Notificaciones a recibir");
-        builder.setMultiChoiceItems(items, checkedItems ,
+        builder.setMultiChoiceItems(items,  checkedItems ,
                 new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedItemId,
                                         boolean isSelected) {
                         if (isSelected) {
-                            itemsSelected.add(selectedItemId);
-                        } else if (itemsSelected.contains(selectedItemId)) {
-                            itemsSelected.remove(Integer.valueOf(selectedItemId));
+                            notificacionesActivas.add(selectedItemId);
+                        } else if (notificacionesActivas.contains(selectedItemId)) {
+                            notificacionesActivas.remove(Integer.valueOf(selectedItemId));
                         }
                     }
                 })
@@ -464,7 +480,7 @@ public class ListasCancionesActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //Your logic when OK button is clicked
-                        habilitarDeshabilitarNotificaciones(itemsSelected);
+                        habilitarDeshabilitarNotificaciones(notificacionesActivas);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -478,20 +494,33 @@ public class ListasCancionesActivity extends AppCompatActivity
 
     public void habilitarDeshabilitarNotificaciones(ArrayList lista)
     {
-        for (int i=0; i<1;i++)
+        for (int i=0; i<2;i++)
         {
             switch (i)
             {
                 case (0):
+            {
+                String topic = idEvento + getResources().getString(R.string.notificacion_votar);
+                if (lista.contains(i)) {
+                    FirebaseMessaging.getInstance().subscribeToTopic(topic);
+                    Funciones.setBooleanPreference(this, "notificacion_aviso_voto",true);
+                }
+                else {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+                    Funciones.setBooleanPreference(this, "notificacion_aviso_voto",false);
+                }
+            }
+            break;
+                case (1):
                 {
-                    String topic = idEvento + getResources().getString(R.string.notificacion_votar);
+                    String topic = idEvento + getResources().getString(R.string.notificacion_cancion_sonando);
                     if (lista.contains(i)) {
                         FirebaseMessaging.getInstance().subscribeToTopic(topic);
-                        Funciones.setBooleanPreference(this, "notificacion_aviso_voto",true);
+                        Funciones.setBooleanPreference(this, "notificacion_cancion_sonando",true);
                     }
                     else {
                         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-                        Funciones.setBooleanPreference(this, "notificacion_aviso_voto",false);
+                        Funciones.setBooleanPreference(this, "notificacion_cancion_sonando",false);
                     }
                 }
                 break;
@@ -503,5 +532,7 @@ public class ListasCancionesActivity extends AppCompatActivity
     {
         if (!Funciones.preferenceContains(this,"notificacion_aviso_voto"))
             Funciones.setBooleanPreference(this,"notificacion_aviso_voto", true);
+        if (!Funciones.preferenceContains(this,"notificacion_cancion_sonando"))
+            Funciones.setBooleanPreference(this,"notificacion_cancion_sonando", true);
     }
 }

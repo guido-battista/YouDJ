@@ -94,5 +94,9 @@ public class Funciones {
         String claveTopic = context.getResources().getString(R.string.notificacion_votar);
         String topic = idEvento + claveTopic;
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+
+        claveTopic = context.getResources().getString(R.string.notificacion_cancion_sonando);
+        topic = idEvento + claveTopic;
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
 }
