@@ -180,7 +180,7 @@ public class ElegirEventoActivity extends AppCompatActivity {
     public void revisarNotificaciones(String eventoId)
     {
         //Notificaciones de aviso para votar
-        if (Funciones.preferenceContains(this, "notificacion_aviso_voto") &&
+        if (!Funciones.preferenceContains(this, "notificacion_aviso_voto") ||
                 Funciones.getBooleanPrefences(this, "notificacion_aviso_voto"))
         {
             String topic = eventoId + getResources().getString(R.string.notificacion_votar);
