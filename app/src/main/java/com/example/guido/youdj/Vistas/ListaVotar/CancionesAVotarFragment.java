@@ -127,7 +127,7 @@ public class CancionesAVotarFragment extends Fragment
         //Se buscan las canciones en el WS
         //Se llama al WebService
         //Se activa el progress bar para ir al WS
-        ProgressDialog progressDialog = mListener.getProgressDialog();
+        final ProgressDialog progressDialog = mListener.getProgressDialog();
         //progressDialog.setTitle("Sumando Voto");
         progressDialog.setMessage("Sumando voto..."); // Setting Message
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
@@ -175,6 +175,7 @@ public class CancionesAVotarFragment extends Fragment
             public void onErrorResponse(VolleyError error) {
                 //This code is executed if there is an error.
                 //Toast.makeText(getActivity(),"Hubo un error", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
                 ErrorManager.mostrarErrorConexion(getActivity());
             }
         }) {
