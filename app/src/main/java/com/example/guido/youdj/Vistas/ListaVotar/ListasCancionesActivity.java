@@ -363,7 +363,7 @@ public class ListasCancionesActivity extends AppCompatActivity
                         if (CancionSonandoResp.ObtenerCodigo(response) == 0) {
                             //Toast.makeText(context, CancionSonandoResp.ObtenerCancionSonando(response), Toast.LENGTH_SHORT).show();
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Canción Sonando")
+                            builder.setTitle("Sonando ahora")
                                     .setMessage(CancionSonandoResp.ObtenerCancionSonando(response))
                                     .setCancelable(false)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
