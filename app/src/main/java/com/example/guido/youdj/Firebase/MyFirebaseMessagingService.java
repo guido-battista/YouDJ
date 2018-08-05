@@ -110,13 +110,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, Constants.CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
+                //.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+                //              R.mipmap.ic_launcher))
                 .setContentTitle(titulo)
                 .setContentText(descripcion)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentIntent(resultPendingIntent);
+
+        //if(Build.VERSION.SDK_INT != Build.VERSION_CODES.M && Build.VERSION.SDK_INT != Build.VERSION_CODES.N)
+        //    notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+        //            R.mipmap.ic_launcher));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -151,13 +157,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, Constants.CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
+                //.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+                //        R.mipmap.ic_launcher))
                 .setContentTitle(titulo)
                 .setContentText(descripcion)
                 .setAutoCancel(true)
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 //.setSound(defaultSoundUri)
                 .setContentIntent(resultPendingIntent);
+
+        //if(Build.VERSION.SDK_INT != Build.VERSION_CODES.M && Build.VERSION.SDK_INT != Build.VERSION_CODES.N)
+        //    notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+        //          R.mipmap.ic_launcher));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
