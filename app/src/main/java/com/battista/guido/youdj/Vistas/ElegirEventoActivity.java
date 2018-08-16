@@ -3,6 +3,8 @@ package com.battista.guido.youdj.Vistas;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.widget.EditText;
@@ -44,6 +46,20 @@ public class ElegirEventoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_elegir_evento);
         nroEvento = (EditText) findViewById(R.id.nroEvento);
         codigoEvento = (EditText) findViewById(R.id.codigoEvento);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_elegir_evento, menu);
+        return true;
+    }
+
+    public void onClickSearch(MenuItem menuItem)
+    {
+
+        Intent intent = new Intent(ElegirEventoActivity.this, MapsActivity.class);
+        startActivity(intent);
     }
 
     public void buttonClick(View v) {
