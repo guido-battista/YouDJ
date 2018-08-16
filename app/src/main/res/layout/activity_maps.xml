@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/framelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:foregroundGravity="fill"><!--foreground color for a FrameLayout-->
+
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,3 +16,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Vistas.MapsActivity" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_location_white"
+        android:background="@color/colorAccent"
+        android:onClick="onFabClick"
+        android:layout_margin="16dp" />
+
+
+</FrameLayout>

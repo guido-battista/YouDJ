@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.guido.youdj.R;
 import android.app.Dialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 import android.Manifest;
 
@@ -35,7 +37,8 @@ import android.location.Location;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+//public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -117,7 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             localizacionHabilitada();
         }
 
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        //mMap.getUiSettings().setZoomControlsEnabled(true);
         //mMap.setMyLocationEnabled(true);
         //mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
@@ -187,18 +190,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             mMap.setMyLocationEnabled(true);
             //mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    // Got last known location. In some rare situations this can be null.
-                        // Logic to handle location object
-                        double latitud = location.getLatitude();
-                        double longi = location.getLongitude();
+                        if (location != null) {
+                            // Got last known location. In some rare situations this can be null.
+                            // Logic to handle location object
+                            double latitud = location.getLatitude();
+                            double longi = location.getLongitude();
 
-                        //Toast.makeText(MapsActivity.this, String.valueOf(latitud) + String.valueOf(longi), Toast.LENGTH_SHORT);
-                        LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, zoomLevel));
+                            //Toast.makeText(MapsActivity.this, String.valueOf(latitud) + String.valueOf(longi), Toast.LENGTH_SHORT);
+                            LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, zoomLevel));
+                        }
                     }
                 }
             );
@@ -208,5 +213,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         };
     }
+
+    public void onFabClick(View v) {
+
+        try {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                // Got last known location. In some rare situations this can be null.
+                                // Logic to handle location object
+                                double latitud = location.getLatitude();
+                                double longi = location.getLongitude();
+
+                                //Toast.makeText(MapsActivity.this, String.valueOf(latitud) + String.valueOf(longi), Toast.LENGTH_SHORT);
+                                LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, zoomLevel));
+                            }
+                        }
+                    }
+            );
+        }
+        catch (SecurityException e)
+        {
+
+        }
+    }
+
+
+
 
 }
