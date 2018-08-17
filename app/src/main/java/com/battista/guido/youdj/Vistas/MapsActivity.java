@@ -10,6 +10,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.battista.guido.youdj.Modelos.Evento;
+import com.battista.guido.youdj.Volley.ErrorManager;
+import com.battista.guido.youdj.Volley.MySingleton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -37,6 +45,10 @@ import android.location.Location;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
+
+import java.util.List;
+
 //public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -48,7 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
     private FusedLocationProviderClient mFusedLocationClient;
-    float zoomLevel = 16;
+    float zoomLevel = 13;
 
 
     @Override
@@ -91,10 +103,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Add a marker in Sydney and move the camera
         //-34.600323, -58.428202: La salsera
-        LatLng sydney = new LatLng(-34.600323, -58.428202);
-
-
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Oscar Gulli - La Salsera"));
+        
+        //LatLng sydney = new LatLng(-34.600323, -58.428202);
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Oscar Gulli - La Salsera"));
+        
+        
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,zoomLevel));
@@ -203,6 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             //Toast.makeText(MapsActivity.this, String.valueOf(latitud) + String.valueOf(longi), Toast.LENGTH_SHORT);
                             LatLng miPosicion = new LatLng(location.getLatitude(), location.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(miPosicion, zoomLevel));
+                            buscarEventosCercanos(location.getLatitude(), location.getLongitude());
                         }
                     }
                 }
@@ -212,6 +226,53 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
 
         };
+    }
+    
+    private void buscarEventosCercanos(double lat, double longit)
+    {
+        final Context context = this;
+
+        final double latitud = lat;
+        final double longitud = longit;
+
+        //Se llama al WebService
+        String url = getResources().getString(R.string.WsUrl) + "/eventosCercanos?latitud=" + String.valueOf(latitud) + "&longitud=" + String.valueOf(longitud);
+
+        Toast.makeText(this,url,Toast.LENGTH_SHORT);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url , null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        //Actualizo canciones a Votar
+                        List<Evento> eventos = Evento.fromJsonArray(response);
+                        //progressDialog.dismiss();
+
+                        for (Evento evento:eventos)
+                        {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(evento.latitud,evento.longitud)).title(evento.nombre + " - " + evento.dj).snippet(evento.lugar));
+                            
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+                        //progressDialog.dismiss();
+                        ErrorManager.mostrarErrorConexion(context);
+                    }
+                });
+
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
     }
 
     public void onFabClick(View v) {
