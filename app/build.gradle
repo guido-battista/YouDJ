@@ -17,7 +17,8 @@ android {
             resValue 'string', 'WsUrl', '"http://vys-server.herokuapp.com"'
         }
         debug {
-            resValue 'string', 'WsUrl', '"http://192.168.1.11:3000"'
+            //resValue 'string', 'WsUrl', '"http://192.168.1.11:3000"'
+            resValue 'string', 'WsUrl', '"http://vys-server.herokuapp.com"'
         }
         defaultConfig {
             resValue 'string', 'WsUrl', '"Vacio"'

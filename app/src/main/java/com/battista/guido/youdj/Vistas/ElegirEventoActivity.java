@@ -164,7 +164,7 @@ public class ElegirEventoActivity extends AppCompatActivity {
 
         //Se activa el progress bar
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Reconociendo Evento en el que se encuentra"); // Setting Title
+        progressDialog.setMessage("Reconociendo Evento en el que se encuentra"); // Setting Title
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
         progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);
